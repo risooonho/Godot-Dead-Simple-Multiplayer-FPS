@@ -73,7 +73,7 @@ func other_abilities():
 		
 		var target = $Camera/RayCast.get_collider()
 		
-		if target.get("health"):
+		if target and target.get("health"):
 			DEBUG.display_info("Shot player " + target.name, "")
 	
 	if Input.is_action_just_pressed("ui_cancel"):
