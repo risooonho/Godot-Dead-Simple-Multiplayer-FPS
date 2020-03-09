@@ -4,7 +4,7 @@ const SERVER_PORT = 4242
 const MAX_PLAYERS = 32
 
 var map_scene = "res://scenes/Map.tscn"
-var player_scene = "res://scenes/Player.tscn"
+var player_scene = "res://scenes/Player2D.tscn"
 var lobby_scene = "res://scenes/Lobby.tscn"
 
 var spawn_node = null # It will search for the spawn node after loading the game to add the player
