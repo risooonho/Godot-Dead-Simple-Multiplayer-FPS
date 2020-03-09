@@ -24,6 +24,10 @@ config/icon="res://icon.png"
 NETWORK="*res://scripts/NETWORK.gd"
 DEBUG="*res://scripts/DEBUG.gd"
 
+[display]
+
+window/size/resizable=false
+
 [input]
 
 forward={

@@ -70,7 +70,11 @@ func _input(event):
 func other_abilities():
 	if Input.is_action_just_pressed("shoot"):
 		Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
+		
+		var target = $Camera/RayCast.get_collider()
+		
+		if target.get("health"):
+			DEBUG.display_info("Shot player " + target.name, "")
 	
 	if Input.is_action_just_pressed("ui_cancel"):
 		Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
-	
