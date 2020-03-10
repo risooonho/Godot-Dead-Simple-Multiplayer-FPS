@@ -50,8 +50,11 @@ func _physics_process(delta):
 	if is_on_floor():
 		if Input.is_action_just_pressed("ui_accept"):
 			movement.y = jump_force
+			DEBUG.display_info(health, "")
 	
 	movement = move_and_slide(movement, Vector3.UP)
+	
+
 	
 	other_abilities()
 	send_data()
@@ -73,8 +76,15 @@ func other_abilities():
 		
 		var target = $Camera/RayCast.get_collider()
 		
-		if target and target.get("health"):
+		if target and target.has_method("damage"):
 			DEBUG.display_info("Shot player " + target.name, "")
+			target.rpc_unreliable("damage", 25)
 	
 	if Input.is_action_just_pressed("ui_cancel"):
 		Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
+
+remotesync func damage(amount):
+	health -= amount
+	DEBUG.display_info(health, "error")
+	if health <= 0:
+		queue_free()
