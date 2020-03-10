@@ -18,7 +18,7 @@ func _ready():
 	# Setup nodes:
 	$Camera/RayCast.enabled = is_me
 	$Camera.current = is_me
-	$Crosshair.visible = is_me
+	$HUD.visible = is_me
 	$Camera/HeadOrientation.visible = !is_me
 
 	# Data activated to send remotely:
@@ -54,8 +54,6 @@ func _physics_process(delta):
 	
 	movement = move_and_slide(movement, Vector3.UP)
 	
-
-	
 	other_abilities()
 	send_data()
 
@@ -77,7 +75,6 @@ func other_abilities():
 		var target = $Camera/RayCast.get_collider()
 		
 		if target and target.has_method("damage"):
-			DEBUG.display_info("Shot player " + target.name, "")
 			target.rpc_unreliable("damage", 25)
 	
 	if Input.is_action_just_pressed("ui_cancel"):
@@ -85,6 +82,6 @@ func other_abilities():
 
 remotesync func damage(amount):
 	health -= amount
-	DEBUG.display_info(health, "error")
+	$HUD/Health.text = str(health)
 	if health <= 0:
 		queue_free()
