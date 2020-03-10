@@ -66,8 +66,10 @@ __meta__ = {
 }
 
 [node name="Health" type="TextEdit" parent="HUD"]
-margin_right = 78.0
-margin_bottom = 60.0
+anchor_top = 1.0
+anchor_bottom = 1.0
+margin_top = -59.0
+margin_right = 84.0
 text = "100"
 __meta__ = {
 "_edit_use_anchors_": false

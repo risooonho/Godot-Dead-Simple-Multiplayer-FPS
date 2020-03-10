@@ -53,7 +53,8 @@ func _physics_process(delta):
 			DEBUG.display_info(health, "")
 	
 	movement = move_and_slide(movement, Vector3.UP)
-	
+	if health <= 0:
+		NETWORK.leave_game()
 	other_abilities()
 	send_data()
 
@@ -83,5 +84,3 @@ func other_abilities():
 remotesync func damage(amount):
 	health -= amount
 	$HUD/Health.text = str(health)
-	if health <= 0:
-		queue_free()
