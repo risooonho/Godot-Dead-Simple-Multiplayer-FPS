@@ -11,16 +11,16 @@ transform = Transform( 1, 0, 0, 0, 0.866025, 0.5, 0, -0.5, 0.866025, 0, 5, 12 )
 [node name="SpawnPoints" type="Node" parent="."]
 
 [node name="Point1" type="Position3D" parent="SpawnPoints"]
-transform = Transform( 0.707107, 0, -0.707107, 0, 1, 0, 0.707107, 0, 0.707107, -7, 1, 7 )
+transform = Transform( 0.707107, 0, -0.707107, 0, 1, 0, 0.707107, 0, 0.707107, -6, 1, 6 )
 
 [node name="Point2" type="Position3D" parent="SpawnPoints"]
-transform = Transform( 0.707107, 0, 0.707107, 0, 1, 0, -0.707107, 0, 0.707107, 7, 1, 7 )
+transform = Transform( 0.707107, 0, 0.707107, 0, 1, 0, -0.707107, 0, 0.707107, 6, 1, 6 )
 
 [node name="Point3" type="Position3D" parent="SpawnPoints"]
-transform = Transform( -0.707107, 0, 0.707107, 0, 1, 0, -0.707107, 0, -0.707107, 7, 1, -7 )
+transform = Transform( -0.707107, 0, 0.707107, 0, 1, 0, -0.707107, 0, -0.707107, 6, 1, -6 )
 
 [node name="Point4" type="Position3D" parent="SpawnPoints"]
-transform = Transform( -0.707107, 0, -0.707107, 0, 1, 0, 0.707107, 0, -0.707107, -7, 1, -7 )
+transform = Transform( -0.707107, 0, -0.707107, 0, 1, 0, 0.707107, 0, -0.707107, -6, 1, -6 )
 
 [node name="Level" type="Spatial" parent="."]
 
@@ -31,21 +31,29 @@ height = 0.002
 depth = 16.0
 
 [node name="CSGBox2" type="CSGBox" parent="Level"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -7, 0, 7 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 0, 6 )
 use_collision = true
+width = 4.0
 height = 0.5
+depth = 4.0
 
 [node name="CSGBox3" type="CSGBox" parent="Level"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 7, 0, 7 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 0, 6 )
 use_collision = true
+width = 4.0
 height = 0.5
+depth = 4.0
 
 [node name="CSGBox4" type="CSGBox" parent="Level"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 7, 0, -7 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 0, -7 )
 use_collision = true
+width = 4.0
 height = 0.5
+depth = 4.0
 
 [node name="CSGBox5" type="CSGBox" parent="Level"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -7, 0, -7 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 0, -6 )
 use_collision = true
+width = 4.0
 height = 0.5
+depth = 4.0

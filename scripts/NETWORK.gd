@@ -85,7 +85,7 @@ func _on_network_peer_connected(id):
 
 # If a client id emitted the signal of disconnecting, remove the player remotely
 func _on_network_peer_disconnected(id):
-	spawn_node.get_node(str(id)).queue_free()
+	get_tree().get_root().find_node(str(id), true, false).queue_free()
 	
 	DEBUG.display_info("- " + str(id) + " has left!", "")
 	DEBUG.display_info("= Total connected: " + str( get_tree().get_network_connected_peers().size() ), "")
