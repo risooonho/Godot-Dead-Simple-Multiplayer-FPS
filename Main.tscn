@@ -1,0 +1,11 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://scenes/Map.tscn" type="PackedScene" id=1]
+
+[node name="Main" type="Node"]
+
+[node name="World" type="Spatial" parent="."]
+
+[node name="Players" type="Node" parent="World"]
+
+[node name="Map" parent="." instance=ExtResource( 1 )]

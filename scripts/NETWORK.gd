@@ -3,10 +3,12 @@ extends Node
 const SERVER_PORT = 4242
 const MAX_PLAYERS = 32
 
+var main_scene = "res://Main.tscn"
 var map_scene = "res://scenes/Map.tscn"
 var player_scene = "res://scenes/Player.tscn"
 var lobby_scene = "res://scenes/Lobby.tscn"
 
+var players_node = null
 var spawn_node = null # It will search for the spawn node after loading the game to add the player
 
 # Signals emitted by others connecting or already connected ====================
@@ -35,11 +37,12 @@ func join_server(SERVER_IP):
 # Enter the game ===============================================================
 
 func load_game():
-	get_tree().change_scene(map_scene)
+	get_tree().change_scene(main_scene)
 
 	# Wait for the map to load, then search for the Spawn node
 	yield(get_tree().create_timer(0.01), "timeout")
-	spawn_node = get_tree().get_root().find_node("Spawn", true, false)
+	players_node = get_tree().get_root().find_node("Players", true, false)
+	spawn_node = get_tree().get_root().find_node("SpawnPoints", true, false)
 
 	if spawn_node != null: # If we have a spawn node in the map
 		
@@ -57,7 +60,11 @@ func load_game():
 func spawn_player(id):
 	var player_instance = load(player_scene).instance()
 	player_instance.name = str(id)
-	spawn_node.add_child(player_instance)
+	players_node.add_child(player_instance)
+	
+	randomize()
+	var spawn_number = randi()% spawn_node.get_children().size()
+	player_instance.global_transform = spawn_node.get_child(spawn_number).global_transform
 
 # Leave the game and return to the Lobby =======================================
 

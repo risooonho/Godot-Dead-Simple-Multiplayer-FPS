@@ -5,6 +5,8 @@ var movement = Vector3()
 var jump_force = 5
 var mouse_sensitivity = 1
 
+var impact_scene = "res://scenes/Impact.tscn"
+
 var health = 100
 
 # Initialize the node, check if we can control it by comparing his name and my id
@@ -50,7 +52,6 @@ func _physics_process(delta):
 	if is_on_floor():
 		if Input.is_action_just_pressed("ui_accept"):
 			movement.y = jump_force
-			DEBUG.display_info(health, "")
 	
 	movement = move_and_slide(movement, Vector3.UP)
 	if health <= 0:
@@ -73,11 +74,18 @@ func other_abilities():
 	if Input.is_action_just_pressed("shoot"):
 		Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 		
-		var target = $Camera/RayCast.get_collider()
 		
-		if target and target.has_method("damage"):
-			target.rpc_unreliable("damage", 25)
-	
+		if $Camera/RayCast.is_colliding():
+			var impact_instance = load(impact_scene).instance()
+			get_tree().get_root().add_child(impact_instance)
+			impact_instance.global_transform.origin = $Camera/RayCast.get_collision_point()
+		
+			var target = $Camera/RayCast.get_collider()
+			
+			if target.has_method("damage"):
+				target.rpc_unreliable("damage", 25)
+		
+		
 	if Input.is_action_just_pressed("ui_cancel"):
 		Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 
