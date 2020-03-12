@@ -55,7 +55,7 @@ func _physics_process(delta):
 	
 	movement = move_and_slide(movement, Vector3.UP)
 	if health <= 0:
-		NETWORK.leave_game()
+		Network.leave_game()
 	other_abilities()
 	send_data()
 

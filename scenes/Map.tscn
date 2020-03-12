@@ -8,20 +8,6 @@ script = ExtResource( 1 )
 [node name="Camera" type="Camera" parent="."]
 transform = Transform( 1, 0, 0, 0, 0.866025, 0.5, 0, -0.5, 0.866025, 0, 5, 12 )
 
-[node name="SpawnPoints" type="Node" parent="."]
-
-[node name="Point1" type="Position3D" parent="SpawnPoints"]
-transform = Transform( 0.707107, 0, -0.707107, 0, 1, 0, 0.707107, 0, 0.707107, -6, 1, 6 )
-
-[node name="Point2" type="Position3D" parent="SpawnPoints"]
-transform = Transform( 0.707107, 0, 0.707107, 0, 1, 0, -0.707107, 0, 0.707107, 6, 1, 6 )
-
-[node name="Point3" type="Position3D" parent="SpawnPoints"]
-transform = Transform( -0.707107, 0, 0.707107, 0, 1, 0, -0.707107, 0, -0.707107, 6, 1, -6 )
-
-[node name="Point4" type="Position3D" parent="SpawnPoints"]
-transform = Transform( -0.707107, 0, -0.707107, 0, 1, 0, 0.707107, 0, -0.707107, -6, 1, -6 )
-
 [node name="Level" type="Spatial" parent="."]
 
 [node name="CSGBox" type="CSGBox" parent="Level"]
@@ -57,3 +43,6 @@ use_collision = true
 width = 4.0
 height = 0.5
 depth = 4.0
+
+[node name="SpawnPoint" type="Position3D" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0 )
