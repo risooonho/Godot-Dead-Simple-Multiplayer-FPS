@@ -76,14 +76,16 @@ func other_abilities():
 		
 		
 		if $Camera/RayCast.is_colliding():
-			var impact_instance = load(impact_scene).instance()
-			get_tree().get_root().add_child(impact_instance)
-			impact_instance.global_transform.origin = $Camera/RayCast.get_collision_point()
-		
 			var target = $Camera/RayCast.get_collider()
 			
 			if target.has_method("damage"):
 				target.rpc_unreliable("damage", 25)
+			
+			var impact_instance = load(impact_scene).instance()
+			get_tree().get_root().add_child(impact_instance)
+			impact_instance.global_transform.origin = $Camera/RayCast.get_collision_point()
+			yield(get_tree().create_timer(0.5), "timeout")
+			impact_instance.queue_free()
 		
 		
 	if Input.is_action_just_pressed("ui_cancel"):
