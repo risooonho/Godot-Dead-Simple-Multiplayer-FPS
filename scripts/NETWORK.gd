@@ -5,10 +5,9 @@ const SERVER_PORT = 4242
 const MAX_PLAYERS = 32
 
 var map_scene = "res://scenes/Map.tscn"
-var player_scene = "res://scenes/Player.tscn"
+var player_scene = "res://scenes/Player2D.tscn"
 var lobby_scene = "res://scenes/Lobby.tscn"
 
-var players_node = null
 var spawn_node = null
 
 func _ready():
@@ -43,7 +42,7 @@ func load_game():
 
 func spawn_player(id):
 	var player_instance = load(player_scene).instance()
-	player_instance.name = str(id)
+	player_instance.name = str(id) # The node name is now the id
 	spawn_node.add_child(player_instance)
 
 func _on_network_peer_connected(id):
