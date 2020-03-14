@@ -32,7 +32,7 @@ func join_server():
 func load_game():
 	get_tree().change_scene(map_scene)
 
-	# Wait for the map to load, then search for the Spawn node
+	# Wait for the map to load, then search for the SpawnPoint node
 	yield(get_tree().create_timer(0.01), "timeout")
 	spawn_node = get_tree().get_root().find_node("SpawnPoint", true, false)
 
