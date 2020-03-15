@@ -42,5 +42,4 @@ width = 4.0
 height = 0.5
 depth = 4.0
 
-[node name="SpawnPoint" type="Position2D" parent="."]
-position = Vector2( 509.002, 224.001 )
+[node name="SpawnPoint" type="Position3D" parent="."]

@@ -48,6 +48,11 @@ material/0 = null
 [node name="RayCast" type="RayCast" parent="Camera"]
 cast_to = Vector3( 0, 0, -100 )
 
+[node name="FlashLight" type="SpotLight" parent="Camera"]
+light_energy = 2.0
+light_indirect_energy = 2.0
+spot_range = 10.0
+
 [node name="HUD" type="Control" parent="."]
 anchor_right = 1.0
 anchor_bottom = 1.0

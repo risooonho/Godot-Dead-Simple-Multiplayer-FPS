@@ -9,6 +9,7 @@ var health = 100
 
 puppet var slave_transform
 puppet var slave_camera_angle
+puppet var slave_light
 
 func _ready():
 	yield(get_tree().create_timer(0.01), "timeout")
@@ -44,10 +45,14 @@ func _physics_process(delta):
 		
 		rset_unreliable("slave_transform", transform)
 		rset_unreliable("slave_camera_angle", $Camera.rotation_degrees.x)
+		rset("slave_light", $Camera/FlashLight.visible)
+		if health <= 0:
+			health = 100
+			global_transform = Network.spawn_node.global_transform
 	else:
 		transform = slave_transform
 		$Camera.rotation_degrees.x = slave_camera_angle
-		
+		$Camera/FlashLight.visible = slave_light
 # Mouse movements to look arround ==============================================
 
 func _input(event):
@@ -71,6 +76,9 @@ func other_abilities():
 		
 	if Input.is_action_just_pressed("ui_cancel"):
 		Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
+	
+	if Input.is_action_just_pressed("flashlight"):
+		$Camera/FlashLight.visible = !$Camera/FlashLight.visible
 
 remotesync func damage(amount):
 	health -= amount
