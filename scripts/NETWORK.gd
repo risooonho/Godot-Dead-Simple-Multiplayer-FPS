@@ -42,7 +42,7 @@ func load_game():
 
 func spawn_player(id):
 	var player_instance = load(player_scene).instance()
-	player_instance.name = str(id) # The node name is now the id
+	player_instance.name = str(id)
 	spawn_node.add_child(player_instance)
 	player_instance.set_network_master(id)
 
