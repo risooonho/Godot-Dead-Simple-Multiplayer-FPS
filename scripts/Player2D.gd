@@ -1,8 +1,6 @@
 extends Sprite
 
-func _ready():
-	# Data sent remotely:
-	rset_config("position", MultiplayerAPI.RPC_MODE_REMOTE)
+puppet var slave_position = Vector2()
 
 func _physics_process(delta):
 	if is_network_master():
@@ -13,4 +11,6 @@ func _physics_process(delta):
 			position.x += 10
 		
 		# The data to send each frame:
-		rset_unreliable("position", position)
+		rset_unreliable("slave_position", position)
+	else:
+		position = slave_position
