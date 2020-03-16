@@ -29,7 +29,7 @@ height = 0.5
 depth = 4.0
 
 [node name="CSGBox4" type="CSGBox" parent="Level"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 0, -7 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 0, -6 )
 use_collision = true
 width = 4.0
 height = 0.5
@@ -43,3 +43,4 @@ height = 0.5
 depth = 4.0
 
 [node name="SpawnPoint" type="Position3D" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 10, 0 )

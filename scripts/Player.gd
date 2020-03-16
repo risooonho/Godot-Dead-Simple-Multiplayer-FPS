@@ -1,5 +1,8 @@
 extends KinematicBody
 
+var mute = false
+
+
 var speed = 6.5
 var movement = Vector3()
 var jump_force = 5
@@ -7,9 +10,9 @@ var mouse_sensitivity = 1
 
 var health = 100
 
-puppet var slave_transform
-puppet var slave_camera_angle
-puppet var slave_light
+sync var puppet_transform
+puppet var puppet_camera_angle
+puppet var puppet_light
 
 func _ready():
 	yield(get_tree().create_timer(0.01), "timeout")
@@ -43,16 +46,19 @@ func _physics_process(delta):
 		
 		other_abilities()
 		
-		rset_unreliable("slave_transform", transform)
-		rset_unreliable("slave_camera_angle", $Camera.rotation_degrees.x)
-		rset("slave_light", $Camera/FlashLight.visible)
+		rset_unreliable("puppet_transform", transform)
+		rset_unreliable("puppet_camera_angle", $Camera.rotation_degrees.x)
+		rset("puppet_light", $Camera/FlashLight.visible)
+		
 		if health <= 0:
 			health = 100
+			$HUD/Health.text = str(health)
 			global_transform = Network.spawn_node.global_transform
 	else:
-		transform = slave_transform
-		$Camera.rotation_degrees.x = slave_camera_angle
-		$Camera/FlashLight.visible = slave_light
+		transform = puppet_transform
+		$Camera.rotation_degrees.x = puppet_camera_angle
+		$Camera/FlashLight.visible = puppet_light
+		
 # Mouse movements to look arround ==============================================
 
 func _input(event):
@@ -65,8 +71,14 @@ func _input(event):
 				$Camera.rotation_degrees.x = clamp($Camera.rotation_degrees.x, -90, 90)
 
 func other_abilities():
+	
+	if Input.is_action_just_pressed("mute"):
+		mute = !mute
+		AudioServer.set_bus_mute(0, mute)
+	
 	if Input.is_action_just_pressed("shoot"):
 		Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
+		rpc("play_sound")
 		
 		if $Camera/RayCast.is_colliding():
 			var target = $Camera/RayCast.get_collider()
@@ -83,3 +95,6 @@ func other_abilities():
 remotesync func damage(amount):
 	health -= amount
 	$HUD/Health.text = str(health)
+
+remotesync func play_sound():
+	$ShootSound.play()

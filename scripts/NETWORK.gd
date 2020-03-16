@@ -20,12 +20,16 @@ func create_server():
 	peer.create_server(SERVER_PORT, MAX_PLAYERS)
 	get_tree().set_network_peer(peer)
 	
+	AudioServer.set_bus_mute(0, true)
+	
 	load_game()
 
 func join_server():
 	var peer = NetworkedMultiplayerENet.new()
 	peer.create_client(SERVER_IP, SERVER_PORT)
 	get_tree().set_network_peer(peer)
+	
+	AudioServer.set_bus_mute(0, false)
 	
 	load_game()
 
