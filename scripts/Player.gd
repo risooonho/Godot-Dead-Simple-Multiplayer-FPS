@@ -11,7 +11,6 @@ var health = 100
 
 sync var puppet_transform
 puppet var puppet_camera_angle
-puppet var puppet_light
 
 var impact_scene = "res://scenes/Impact.tscn"
 var bullet_scene = "res://scenes/Bullet.tscn"
@@ -24,6 +23,8 @@ func _ready():
 	$Camera.current = is_master
 	$HUD.visible = is_master
 	$Camera/HeadOrientation.visible = !is_master
+	
+	
 
 func _physics_process(delta):
 	if is_network_master():
@@ -50,7 +51,7 @@ func _physics_process(delta):
 		
 		rset_unreliable("puppet_transform", transform)
 		rset_unreliable("puppet_camera_angle", $Camera.rotation_degrees.x)
-		rset("puppet_light", $Camera/FlashLight.visible)
+		rpc_unreliable("flashlight", $Camera/FlashLight.visible)
 		
 		if health <= 0:
 			health = 100
@@ -60,8 +61,6 @@ func _physics_process(delta):
 	else:
 		transform = puppet_transform
 		$Camera.rotation_degrees.x = puppet_camera_angle
-		$Camera/FlashLight.visible = puppet_light
-		
 # Mouse movements to look arround ==============================================
 
 func _input(event):
@@ -97,6 +96,9 @@ func other_abilities():
 	
 	if Input.is_action_just_pressed("flashlight"):
 		$Camera/FlashLight.visible = !$Camera/FlashLight.visible
+
+remotesync func flashlight(status):
+	$Camera/FlashLight.visible = status
 
 remotesync func impact(impact_position):
 	var impact_instance = load(impact_scene).instance()
