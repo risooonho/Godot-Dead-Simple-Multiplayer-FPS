@@ -2,7 +2,6 @@ extends KinematicBody
 
 var mute = false
 
-
 var speed = 6.5
 var movement = Vector3()
 var jump_force = 5
@@ -13,6 +12,9 @@ var health = 100
 sync var puppet_transform
 puppet var puppet_camera_angle
 puppet var puppet_light
+
+var impact_scene = "res://scenes/Impact.tscn"
+var bullet_scene = "res://scenes/Bullet.tscn"
 
 func _ready():
 	yield(get_tree().create_timer(0.01), "timeout")
@@ -54,6 +56,7 @@ func _physics_process(delta):
 			health = 100
 			$HUD/Health.text = str(health)
 			global_transform = Network.spawn_node.global_transform
+			movement.y = 0
 	else:
 		transform = puppet_transform
 		$Camera.rotation_degrees.x = puppet_camera_angle
@@ -80,8 +83,11 @@ func other_abilities():
 		Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 		rpc("play_sound")
 		
+		rpc("bullet", $Camera/BulletPosition.global_transform, $Camera/BulletPosition.global_transform.basis.z)
+		rpc("bullet_light")
 		if $Camera/RayCast.is_colliding():
 			var target = $Camera/RayCast.get_collider()
+			rpc("impact", $Camera/RayCast.get_collision_point())
 			
 			if target.has_method("damage"):
 				target.rpc_unreliable("damage", 25)
@@ -92,9 +98,30 @@ func other_abilities():
 	if Input.is_action_just_pressed("flashlight"):
 		$Camera/FlashLight.visible = !$Camera/FlashLight.visible
 
+remotesync func impact(impact_position):
+	var impact_instance = load(impact_scene).instance()
+	get_tree().get_root().get_node("Map").add_child(impact_instance)
+	impact_instance.global_transform.origin = impact_position
+	yield(get_tree().create_timer(1), "timeout")
+	impact_instance.queue_free()
+
 remotesync func damage(amount):
 	health -= amount
 	$HUD/Health.text = str(health)
 
 remotesync func play_sound():
-	$ShootSound.play()
+	$Camera/ShootSound.play()
+
+remotesync func bullet(emitter, direction):
+	var bullet_instance = load(bullet_scene).instance()
+	
+	get_tree().get_root().get_node("Map").add_child(bullet_instance)
+	bullet_instance.global_transform = emitter
+	bullet_instance.linear_velocity = direction * - 500
+	yield(get_tree().create_timer(2), "timeout")
+	bullet_instance.queue_free()
+
+remotesync func bullet_light():
+	$Camera/BulletLight.visible = true
+	yield(get_tree().create_timer(0.05), "timeout")
+	$Camera/BulletLight.visible = false
