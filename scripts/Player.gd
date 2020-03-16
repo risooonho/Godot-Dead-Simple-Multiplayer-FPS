@@ -8,9 +8,10 @@ var jump_force = 5
 var mouse_sensitivity = 1
 
 var health = 100
+var score = 0
 
-sync var puppet_transform
-puppet var puppet_camera_angle
+sync var puppet_transform = transform
+puppet var puppet_camera_angle : float
 
 var impact_scene = "res://scenes/Impact.tscn"
 var bullet_scene = "res://scenes/Bullet.tscn"
@@ -23,10 +24,9 @@ func _ready():
 	$Camera.current = is_master
 	$HUD.visible = is_master
 	$Camera/HeadOrientation.visible = !is_master
-	
-	
 
 func _physics_process(delta):
+	
 	if is_network_master():
 		# Controls from user inputs, set in 2D to normalize the direction
 		var direction_2D = Vector2()
@@ -54,13 +54,14 @@ func _physics_process(delta):
 		rpc_unreliable("flashlight", $Camera/FlashLight.visible)
 		
 		if health <= 0:
-			health = 100
+			rpc("restore_health")
 			$HUD/Health.text = str(health)
 			global_transform = Network.spawn_node.global_transform
 			movement.y = 0
 	else:
 		transform = puppet_transform
 		$Camera.rotation_degrees.x = puppet_camera_angle
+		pass
 # Mouse movements to look arround ==============================================
 
 func _input(event):
@@ -90,12 +91,19 @@ func other_abilities():
 			
 			if target.has_method("damage"):
 				target.rpc_unreliable("damage", 25)
+				if target.health < 25:
+					score += 1
+					$HUD/Score.text = "Score: " + str(score)
+					rpc("update_score", score)
 		
 	if Input.is_action_just_pressed("ui_cancel"):
 		Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 	
 	if Input.is_action_just_pressed("flashlight"):
 		$Camera/FlashLight.visible = !$Camera/FlashLight.visible
+
+remotesync func restore_health():
+	health = 100
 
 remotesync func flashlight(status):
 	$Camera/FlashLight.visible = status
@@ -127,3 +135,6 @@ remotesync func bullet_light():
 	$Camera/BulletLight.visible = true
 	yield(get_tree().create_timer(0.05), "timeout")
 	$Camera/BulletLight.visible = false
+
+remotesync func update_score(ennemy_new_score):
+	score = ennemy_new_score
