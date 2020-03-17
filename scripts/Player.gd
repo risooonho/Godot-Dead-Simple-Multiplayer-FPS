@@ -8,15 +8,17 @@ var jump_force = 5
 var mouse_sensitivity = 1
 
 var health = 100
+var ammo = 10
 var score = 0
 
-sync var puppet_transform = transform
+puppet var puppet_transform = transform
 puppet var puppet_camera_angle : float
 
 var impact_scene = "res://scenes/Impact.tscn"
 var bullet_scene = "res://scenes/Bullet.tscn"
 
 func _ready():
+	get_tree().connect("network_peer_connected", self, "_on_player_peer_connected")
 	yield(get_tree().create_timer(0.01), "timeout")
 	var is_master = is_network_master()
 	
@@ -25,9 +27,12 @@ func _ready():
 	$HUD.visible = is_master
 	$Camera/HeadOrientation.visible = !is_master
 
+	$HUD/Ammo.text = str(ammo)
+
 func _physics_process(delta):
-	
 	if is_network_master():
+		$HUD/Ammo.text = str(ammo)
+		
 		# Controls from user inputs, set in 2D to normalize the direction
 		var direction_2D = Vector2()
 		direction_2D.y = Input.get_action_strength("backward") - Input.get_action_strength("forward")
@@ -51,7 +56,7 @@ func _physics_process(delta):
 		
 		rset_unreliable("puppet_transform", transform)
 		rset_unreliable("puppet_camera_angle", $Camera.rotation_degrees.x)
-		rpc_unreliable("flashlight", $Camera/FlashLight.visible)
+#		rpc_unreliable("flashlight", $Camera/FlashLight.visible)
 		
 		if health <= 0:
 			rpc("restore_health")
@@ -79,34 +84,41 @@ func other_abilities():
 		mute = !mute
 		AudioServer.set_bus_mute(0, mute)
 	
-	if Input.is_action_just_pressed("shoot"):
-		Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
-		rpc("play_sound")
-		
-		rpc("bullet", $Camera/BulletPosition.global_transform, $Camera/BulletPosition.global_transform.basis.z)
-		rpc("bullet_light")
-		if $Camera/RayCast.is_colliding():
-			var target = $Camera/RayCast.get_collider()
-			rpc("impact", $Camera/RayCast.get_collision_point())
+	if ammo > 0:
+		if Input.is_action_just_pressed("shoot"):
+			Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
+			ammo -= 1
+			$HUD/Ammo.text = str(ammo)
+			rpc("play_sound")
 			
-			if target.has_method("damage"):
-				target.rpc_unreliable("damage", 25)
-				if target.health < 25:
-					score += 1
-					$HUD/Score.text = "Score: " + str(score)
-					rpc("update_score", score)
+			rpc("bullet", $Camera/BulletPosition.global_transform, $Camera/BulletPosition.global_transform.basis.z)
+			rpc("bullet_light")
+			if $Camera/RayCast.is_colliding():
+				var target = $Camera/RayCast.get_collider()
+				rpc("impact", $Camera/RayCast.get_collision_point())
+				
+				if target.has_method("damage"):
+					target.rpc_unreliable("damage", 25)
+					if target.health < 25:
+						score += 1
+						$HUD/Score.text = "Score: " + str(score)
+						rpc("update_score", score)
 		
 	if Input.is_action_just_pressed("ui_cancel"):
 		Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 	
 	if Input.is_action_just_pressed("flashlight"):
 		$Camera/FlashLight.visible = !$Camera/FlashLight.visible
+		rpc("flashlight", $Camera/FlashLight.visible)
+
+func _on_player_peer_connected(id):
+	rpc("flashlight", $Camera/FlashLight.visible)
+
+remotesync func flashlight(state):
+	$Camera/FlashLight.visible = state
 
 remotesync func restore_health():
 	health = 100
-
-remotesync func flashlight(status):
-	$Camera/FlashLight.visible = status
 
 remotesync func impact(impact_position):
 	var impact_instance = load(impact_scene).instance()

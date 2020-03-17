@@ -25,7 +25,9 @@ font_data = ExtResource( 3 )
 [sub_resource type="Theme" id=5]
 default_font = SubResource( 4 )
 
-[node name="Player" type="KinematicBody"]
+[node name="Player" type="KinematicBody" groups=[
+"Player",
+]]
 script = ExtResource( 1 )
 
 [node name="MeshInstance" type="MeshInstance" parent="."]
@@ -108,6 +110,17 @@ margin_left = -89.5
 margin_right = 89.5
 margin_bottom = 56.0
 text = "Score: 0"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Ammo" type="TextEdit" parent="HUD"]
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = -206.0
+margin_top = -75.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
