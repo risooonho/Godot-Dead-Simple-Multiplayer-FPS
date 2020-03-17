@@ -18,7 +18,7 @@ var impact_scene = "res://scenes/Impact.tscn"
 var bullet_scene = "res://scenes/Bullet.tscn"
 
 func _ready():
-	get_tree().connect("network_peer_connected", self, "_on_player_peer_connected")
+	get_tree().connect("network_peer_connected", self, "_on_network_peer_connected")
 	yield(get_tree().create_timer(0.01), "timeout")
 	var is_master = is_network_master()
 	
@@ -111,11 +111,11 @@ func other_abilities():
 		$Camera/FlashLight.visible = !$Camera/FlashLight.visible
 		rpc("flashlight", $Camera/FlashLight.visible)
 
-func _on_player_peer_connected(id):
+func _on_network_peer_connected(id):
 	rpc("flashlight", $Camera/FlashLight.visible)
 
-remotesync func flashlight(state):
-	$Camera/FlashLight.visible = state
+remotesync func flashlight(status):
+	$Camera/FlashLight.visible = status
 
 remotesync func restore_health():
 	health = 100
