@@ -8,7 +8,8 @@ var jump_force = 5
 var mouse_sensitivity = 1
 
 var health = 100
-var ammo = 10
+var max_ammo = 20
+var ammo = max_ammo
 var score = 0
 
 puppet var puppet_transform = transform
@@ -28,6 +29,8 @@ func _ready():
 	$Camera/HeadOrientation.visible = !is_master
 
 	$HUD/Ammo.text = str(ammo)
+	
+	get_tree().call_group("Enemy", "set_player", self)
 
 func _physics_process(delta):
 	if is_network_master():
@@ -84,9 +87,9 @@ func other_abilities():
 		mute = !mute
 		AudioServer.set_bus_mute(0, mute)
 	
-	if ammo > 0:
-		if Input.is_action_just_pressed("shoot"):
-			Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
+	if Input.is_action_just_pressed("shoot"):
+		Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
+		if ammo > 0:
 			ammo -= 1
 			$HUD/Ammo.text = str(ammo)
 			rpc("play_sound")
