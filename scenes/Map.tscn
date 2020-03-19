@@ -97,7 +97,7 @@ data = SubResource( 1 )
 [node name="Area" parent="Level" instance=ExtResource( 1 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 1, 6 )
 
-[node name="SpawnPoint" type="Position3D" parent="."]
+[node name="Spawn" type="Position3D" parent="."]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 10, 0 )
 
 [node name="AmmoPack" parent="." instance=ExtResource( 2 )]
