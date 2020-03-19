@@ -2,12 +2,12 @@
 
 importer="wav"
 type="AudioStreamSample"
-path="res://.import/fire.wav-c42dad7292af34f77e993054d3e5d205.sample"
+path="res://.import/fire.wav-a27ec6fbe43677c4bc5e365824a76598.sample"
 
 [deps]
 
-source_file="res://fire.wav"
-dest_files=[ "res://.import/fire.wav-c42dad7292af34f77e993054d3e5d205.sample" ]
+source_file="res://other/fire.wav"
+dest_files=[ "res://.import/fire.wav-a27ec6fbe43677c4bc5e365824a76598.sample" ]
 
 [params]
 
